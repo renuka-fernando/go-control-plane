@@ -24,6 +24,9 @@ const (
 	ExtensionConfigType = apiTypePrefix + "envoy.config.core.v3.TypedExtensionConfig"
 	RuntimeType         = apiTypePrefix + "envoy.service.runtime.v3.Runtime"
 
+	// Rate Limit service
+	RateLimitConfigType = APITypePrefix + "ratelimit.config.ratelimit.v3.RateLimitConfig"
+
 	// AnyType is used only by ADS
 	AnyType = ""
 )
