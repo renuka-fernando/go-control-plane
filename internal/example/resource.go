@@ -30,6 +30,7 @@ import (
 	"github.com/envoyproxy/go-control-plane/pkg/cache/v3"
 	"github.com/envoyproxy/go-control-plane/pkg/resource/v3"
 	"github.com/envoyproxy/go-control-plane/pkg/wellknown"
+	rls_config "github.com/envoyproxy/go-control-plane/ratelimit/config/ratelimit/v3"
 )
 
 const (
@@ -40,6 +41,28 @@ const (
 	UpstreamHost = "www.envoyproxy.io"
 	UpstreamPort = 80
 )
+
+func makeRlsConfig() *rls_config.RateLimitConfig {
+	return &rls_config.RateLimitConfig{
+		Domain: "foo",
+		Descriptors: []*rls_config.RateLimitDescriptor{
+			{
+				Key:   "k1",
+				Value: "v1",
+				Descriptors: []*rls_config.RateLimitDescriptor{
+					{
+						Key:   "k2",
+						Value: "v2",
+						RateLimit: &rls_config.RateLimitPolicy{
+							Unit:            "second",
+							RequestsPerUnit: 2,
+						},
+					},
+				},
+			},
+		},
+	}
+}
 
 func makeCluster(clusterName string) *cluster.Cluster {
 	return &cluster.Cluster{
@@ -171,9 +194,10 @@ func makeConfigSource() *core.ConfigSource {
 func GenerateSnapshot() *cache.Snapshot {
 	snap, _ := cache.NewSnapshot("1",
 		map[resource.Type][]types.Resource{
-			resource.ClusterType:  {makeCluster(ClusterName)},
-			resource.RouteType:    {makeRoute(RouteName, ClusterName)},
-			resource.ListenerType: {makeHTTPListener(ListenerName, RouteName)},
+			// resource.ClusterType:         {makeCluster(ClusterName)},
+			// resource.RouteType:           {makeRoute(RouteName, ClusterName)},
+			// resource.ListenerType:        {makeHTTPListener(ListenerName, RouteName)},
+			resource.RateLimitConfigType: {makeRlsConfig()},
 		},
 	)
 	return snap

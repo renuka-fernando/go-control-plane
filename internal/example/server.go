@@ -31,6 +31,7 @@ import (
 	runtimeservice "github.com/envoyproxy/go-control-plane/envoy/service/runtime/v3"
 	secretservice "github.com/envoyproxy/go-control-plane/envoy/service/secret/v3"
 	"github.com/envoyproxy/go-control-plane/pkg/server/v3"
+	rlsconfigservice "github.com/envoyproxy/go-control-plane/ratelimit/service/ratelimit/v3"
 )
 
 const (
@@ -49,6 +50,7 @@ func registerServer(grpcServer *grpc.Server, server server.Server) {
 	listenerservice.RegisterListenerDiscoveryServiceServer(grpcServer, server)
 	secretservice.RegisterSecretDiscoveryServiceServer(grpcServer, server)
 	runtimeservice.RegisterRuntimeDiscoveryServiceServer(grpcServer, server)
+	rlsconfigservice.RegisterRateLimitConfigDiscoveryServiceServer(grpcServer, server)
 }
 
 // RunServer starts an xDS server at the given port.
