@@ -54,8 +54,29 @@ func makeRlsConfig() *rls_config.RateLimitConfig {
 						Key:   "k2",
 						Value: "v2",
 						RateLimit: &rls_config.RateLimitPolicy{
-							Unit:            "second",
+							Unit:            "minute",
 							RequestsPerUnit: 2,
+						},
+					},
+				},
+			},
+		},
+	}
+}
+func makeRlsConfig2() *rls_config.RateLimitConfig {
+	return &rls_config.RateLimitConfig{
+		Domain: "foo",
+		Descriptors: []*rls_config.RateLimitDescriptor{
+			{
+				Key:   "k1",
+				Value: "v1",
+				Descriptors: []*rls_config.RateLimitDescriptor{
+					{
+						Key:   "k3",
+						Value: "v3",
+						RateLimit: &rls_config.RateLimitPolicy{
+							Unit:            "minute",
+							RequestsPerUnit: 5,
 						},
 					},
 				},
@@ -198,6 +219,18 @@ func GenerateSnapshot() *cache.Snapshot {
 			// resource.RouteType:           {makeRoute(RouteName, ClusterName)},
 			// resource.ListenerType:        {makeHTTPListener(ListenerName, RouteName)},
 			resource.RateLimitConfigType: {makeRlsConfig()},
+		},
+	)
+	return snap
+}
+
+func GenerateSnapshot2() *cache.Snapshot {
+	snap, _ := cache.NewSnapshot("2",
+		map[resource.Type][]types.Resource{
+			// resource.ClusterType:         {makeCluster(ClusterName)},
+			// resource.RouteType:           {makeRoute(RouteName, ClusterName)},
+			// resource.ListenerType:        {makeHTTPListener(ListenerName, RouteName)},
+			resource.RateLimitConfigType: {makeRlsConfig2()},
 		},
 	)
 	return snap

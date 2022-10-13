@@ -16,7 +16,9 @@ package main
 import (
 	"context"
 	"flag"
+	"log"
 	"os"
+	"time"
 
 	"github.com/envoyproxy/go-control-plane/internal/example"
 	"github.com/envoyproxy/go-control-plane/pkg/cache/v3"
@@ -61,6 +63,23 @@ func main() {
 		l.Errorf("snapshot error %q for %+v", err, snapshot)
 		os.Exit(1)
 	}
+
+	go func() {
+		time.Sleep(30 * time.Second)
+		log.Println("applying second one")
+		snapshot = example.GenerateSnapshot2()
+		if err := snapshot.Consistent(); err != nil {
+			l.Errorf("snapshot inconsistency: %+v\n%+v", snapshot, err)
+			os.Exit(1)
+		}
+		l.Debugf("will serve snapshot %+v", snapshot)
+
+		// Add the snapshot to the cache
+		if err := cache.SetSnapshot(context.Background(), nodeID, snapshot); err != nil {
+			l.Errorf("snapshot error %q for %+v", err, snapshot)
+			os.Exit(1)
+		}
+	}()
 
 	// Run the xDS server
 	ctx := context.Background()
