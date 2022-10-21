@@ -20,7 +20,9 @@ import (
 	"net"
 	"time"
 
+	"github.com/envoyproxy/ratelimit/src/utils"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/keepalive"
 
 	clusterservice "github.com/envoyproxy/go-control-plane/envoy/service/cluster/v3"
@@ -68,6 +70,7 @@ func RunServer(ctx context.Context, srv server.Server, port uint) {
 			MinTime:             grpcKeepaliveMinTime,
 			PermitWithoutStream: true,
 		}),
+		grpc.Creds(credentials.NewTLS(utils.TlsConfigFromFiles("/Users/renuka/releases/cc/choreo-connect-1.1.0/docker-compose/resources/adapter/security/keystore/mg.pem", "/Users/renuka/releases/cc/choreo-connect-1.1.0/docker-compose/resources/adapter/security/keystore/mg.key", "/Users/renuka/releases/cc/choreo-connect-1.1.0/docker-compose/resources/adapter/security/keystore/mg.pem", utils.ClientCA))),
 	)
 	grpcServer := grpc.NewServer(grpcOptions...)
 

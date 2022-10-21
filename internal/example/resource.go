@@ -54,7 +54,7 @@ func makeRlsConfig() *rls_config.RateLimitConfig {
 						Key:   "k2",
 						Value: "v2",
 						RateLimit: &rls_config.RateLimitPolicy{
-							Unit:            "minute",
+							Unit:            rls_config.RateLimitUnit_MINUTE,
 							RequestsPerUnit: 2,
 						},
 					},
@@ -72,11 +72,30 @@ func makeRlsConfig2() *rls_config.RateLimitConfig {
 				Value: "v1",
 				Descriptors: []*rls_config.RateLimitDescriptor{
 					{
-						Key:   "k3",
-						Value: "v3",
+						Key:   "user",
+						Value: "renuka",
 						RateLimit: &rls_config.RateLimitPolicy{
-							Unit:            "minute",
+							// Name:            "specific_limit",
+							Unit:            rls_config.RateLimitUnit_SECOND,
 							RequestsPerUnit: 5,
+						},
+					},
+				},
+			},
+			{
+				Key:   "k2",
+				Value: "v2",
+				Descriptors: []*rls_config.RateLimitDescriptor{
+					{
+						Key:   "user",
+						Value: "renuka",
+						RateLimit: &rls_config.RateLimitPolicy{
+							Replaces: []*rls_config.RateLimitReplace{
+								{
+									Name: "specific_limit",
+								},
+							},
+							Unlimited: true,
 						},
 					},
 				},

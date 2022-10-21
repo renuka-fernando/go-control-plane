@@ -65,7 +65,7 @@ func main() {
 	}
 
 	go func() {
-		time.Sleep(30 * time.Second)
+		time.Sleep(5 * time.Second)
 		log.Println("applying second one")
 		snapshot = example.GenerateSnapshot2()
 		if err := snapshot.Consistent(); err != nil {
