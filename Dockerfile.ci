@@ -1,4 +1,4 @@
 FROM golang:1.16
 
 # TODO(mattklein123): Update this to envoy-dev:latest and fix tests.
-COPY --from=envoyproxy/envoy-dev:latest /usr/local/bin/envoy /usr/local/bin/envoy
+COPY --from=envoyproxy/envoy-dev:2ce96952de8431564c9c548a6f0773e21c1884de /usr/local/bin/envoy /usr/local/bin/envoy
